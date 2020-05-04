@@ -1,0 +1,10 @@
+[{"index":0,"name":"퀘스트1","time":1,"reward":6,"upgrade":10,"plus":1},
+{"index":1,"name":"퀘스트2","time":3,"reward":144,"upgrade":130,"plus":14},
+{"index":2,"name":"퀘스트3","time":5,"reward":5000,"upgrade":1800,"plus":198},
+{"index":3,"name":"퀘스트4","time":10,"reward":81600,"upgrade":27300,"plus":3003},
+{"index":4,"name":"퀘스트5","time":30,"reward":2400000,"upgrade":436800,"plus":48048},
+{"index":5,"name":"퀘스트6","time":60,"reward":48000000,"upgrade":7400000,"plus":814000},
+{"index":6,"name":"퀘스트7","time":120,"reward":960000000,"upgrade":133600000,"plus":14696000},
+{"index":7,"name":"퀘스트8","time":300,"reward":28800000000,"upgrade":2500000000,"plus":275000000},
+{"index":8,"name":"퀘스트9","time":600,"reward":756000000000,"upgrade":50700000000,"plus":5577000000},
+{"index":9,"name":"퀘스트10","time":1800,"reward":31200000000000,"upgrade":1000000000000,"plus":110000000000}]
