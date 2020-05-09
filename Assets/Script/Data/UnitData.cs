@@ -15,10 +15,14 @@ public class UnitData : MonoBehaviour
     public int _team_slot = -1;
     public int _buy_count;
 
+    public ItemData _weapon;
+    public ItemData _armor;
+    public ItemData _acc;
+
     public long _hp;
     public long _atk;
     public float _cri;
-    public long _rcv;
+    public long _def;
 
     public void OnSet(int _index_data)
     {
@@ -27,10 +31,13 @@ public class UnitData : MonoBehaviour
         _lev = GameData.Instance._playerData._unit[_index_data]._lev;
         _buy_count = GameData.Instance._playerData._unit[_index_data]._buy_count;
         
+        OnWeapon();
+        OnArmor();
+
         OnHp();
         OnAtk();
         OnCri();
-        OnRcv();
+        OnDef();
 
         _team = -1;
         _team_slot = -1;
@@ -45,15 +52,50 @@ public class UnitData : MonoBehaviour
     public void OnAtk()
     {
         _atk = GameData.Instance._unitDataIndex[_unit_index]._atk;
+        if(_weapon != null) _atk += _weapon._power;
     }
 
     public void OnCri()
     {
         _cri = GameData.Instance._unitDataIndex[_unit_index]._cri;
     }
-    public void OnRcv()
+    public void OnDef()
     {
-        _rcv = GameData.Instance._unitDataIndex[_unit_index]._rcv;
+        _def = GameData.Instance._unitDataIndex[_unit_index]._def;
+        if(_armor != null) _def += _armor._power;
+    }
+
+    public void OnWeapon()
+    {
+        int _weapon_code = GameData.Instance._playerData._unit[_data_index]._weapon;
+
+        if(_weapon_code > -1)
+        {
+            for(var i = 0 ; i < GameData.Instance._itemMN._item_data.Count; i++)
+            {
+                if(GameData.Instance._itemMN._item_data[i]._data_index == _weapon_code)
+                {
+                    _weapon = GameData.Instance._itemMN._item_data[i];
+                    _weapon._equip_unit = this; 
+                }
+                     
+            }
+        }
+    }
+
+    public void OnArmor()
+    {
+        int _armor_code = GameData.Instance._playerData._unit[_data_index]._armor;
+
+        if(_armor_code > -1)
+        {
+            for(var i = 0 ; i < GameData.Instance._itemMN._item_data.Count; i++)
+            {
+                if(GameData.Instance._itemMN._item_data[i]._data_index == _armor_code)
+                    _armor = GameData.Instance._itemMN._item_data[i];
+                    _armor._equip_unit = this;
+            }
+        }
     }
 
     public void OnLevelUp()
@@ -71,7 +113,7 @@ public class UnitData : MonoBehaviour
         if(_team > -1) GameData.Instance._expeditionMN._team_data[_team].OnUpdateInfo();
     }
 
-    public void OnFire()//직원 해고
+    public void OnDel()//직원 해고
     {
         if(_team > -1) 
         {
@@ -79,6 +121,9 @@ public class UnitData : MonoBehaviour
             _team_data.OnTeamOut(_team_slot, this);
             _team_data.OnUpdateInfo();
         }
+
+        if(_weapon != null) _weapon._equip_unit = null;//무기를 착용하고 있으면 자동 해제
+        if(_armor != null) _armor._equip_unit = null;//방어구를 착용하고 있으면 자동 해제
 
         _unit_data = GameData.Instance._playerData._unit[_data_index];
         _unit_data._lev = 0;
@@ -95,5 +140,52 @@ public class UnitData : MonoBehaviour
     {
         _team = -1;
         _team_slot = -1;
+    }
+
+    public void OnEquipItem(ItemData item)
+    {
+        item._equip_unit = this;
+        _unit_data = GameData.Instance._playerData._unit[_data_index];
+
+        if(item._class == 0)//무기
+        {
+            if(_weapon != null) _weapon._equip_unit = null;
+            _unit_data._weapon = item._data_index;
+            _weapon = item;
+            OnAtk();
+        }
+        else if(item._class == 1)//방어구
+        {
+            if(_armor != null) _armor._equip_unit = null;
+            _unit_data._armor = item._data_index;            
+            _armor = item;
+            OnDef();
+        }
+        GameData.Instance._playerData._unit[_data_index] = _unit_data;
+
+        if(_team > -1) GameData.Instance._expeditionMN._team_data[_team].OnUpdateInfo();
+    }
+
+    public void UnEquipItem(ItemData item)
+    {
+        item._equip_unit = null;
+        _unit_data = GameData.Instance._playerData._unit[_data_index];
+
+        if(item._class == 0)//무기
+        {
+            _unit_data._weapon = -1;
+            GameData.Instance._playerData._unit[_data_index] = _unit_data;
+            _weapon = null;
+            OnAtk();
+        }
+        else if(item._class == 1)//방어구
+        {
+            _unit_data._armor = -1;
+            GameData.Instance._playerData._unit[_data_index] = _unit_data;
+            _armor = null;
+            OnDef();
+        }
+
+        if(_team > -1) GameData.Instance._expeditionMN._team_data[_team].OnUpdateInfo();
     }
 }

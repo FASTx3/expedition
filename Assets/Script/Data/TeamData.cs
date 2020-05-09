@@ -9,7 +9,7 @@ public class TeamData : MonoBehaviour
     public float _hp_percent;//원정대 체력 퍼센트   
     public long _atk;//원정대 공격력
     public float _cri;//원정대 치명타율
-    public long _rcv;//원정대 초당 회복량
+    public long _def;//원정대 초당 회복량
 
     public int _map;//원정중인 맵
     public int _stage;//진행중인 스테이지
@@ -100,7 +100,7 @@ public class TeamData : MonoBehaviour
         _hp_percent = 0;
         _atk = 0;
         _cri = 0;
-        _rcv = 0;
+        _def = 0;
 
         for(var i = 0; i < _member.Count; i++)
         {
@@ -108,7 +108,7 @@ public class TeamData : MonoBehaviour
             if(_status < 2) _hp += _member[i]._hp;            
             _hp_max += _member[i]._hp;
             _atk += _member[i]._atk;
-            _rcv += _member[i]._rcv;
+            _def += _member[i]._def;
         }
 
         if(_hp > _hp_max) _hp = _hp_max;

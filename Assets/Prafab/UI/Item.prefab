@@ -119,10 +119,10 @@ GameObject:
   - component: {fileID: 7055989882591703991}
   - component: {fileID: 7055989882591703977}
   - component: {fileID: 7055989882591703990}
-  - component: {fileID: -3849213582758129415}
+  - component: {fileID: 7725673492243034727}
   - component: {fileID: 9007577832771461647}
   m_Layer: 5
-  m_Name: Weapon
+  m_Name: Item
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -185,7 +185,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &-3849213582758129415
+--- !u!114 &7725673492243034727
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -194,10 +194,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 7055989882591703988}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c8765e95e263a644baa45abae0072280, type: 3}
+  m_Script: {fileID: 11500000, guid: c555b8dc2834a88488edadd750dca34a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _unit_info: {fileID: 0}
+  _item_info: {fileID: 0}
   _sellect: {fileID: 5776622781604490133}
   _parent: {fileID: 8320945613759896554}
 --- !u!114 &9007577832771461647
@@ -243,7 +243,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: -3849213582758129415}
+      - m_Target: {fileID: 7725673492243034727}
         m_MethodName: OnSellect
         m_Mode: 1
         m_Arguments:

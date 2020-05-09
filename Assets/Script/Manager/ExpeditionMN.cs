@@ -33,9 +33,9 @@ public class ExpeditionMN : MonoBehaviour
         _set_team._status = 0;
 
         _set_team._member = new List<int>{-1, -1, -1, -1, -1};
-        _set_team._weopon = 0;
-        _set_team._armor = 0;
-        _set_team._acc = 0;
+        _set_team._weapon = -1;
+        _set_team._armor = -1;
+        _set_team._acc = -1;
 
         _set_team._time = null;
 
@@ -157,7 +157,7 @@ public class ExpeditionMN : MonoBehaviour
 
         _text[0].text = _team_data[_team_now]._atk.ToString();//팀 공격력
         _text[1].text = _team_data[_team_now]._cri.ToString();//팀 치명타율
-        _text[2].text = _team_data[_team_now]._rcv.ToString();//팀 초당 회복량
+        _text[2].text = _team_data[_team_now]._def.ToString();//팀 초당 회복량
 
         _text[3].text = "";
         OnTeamStatusText(_team_data[_team_now]._status);//팀 상태
@@ -215,14 +215,89 @@ public class ExpeditionMN : MonoBehaviour
         if(!GameData.Instance._popMN.OnMainPop(1)) return;
     }
     
-    public void OnGold(long gold)
+    public void OnGold()
     {
+
         //_text[7].text = GameData.Instance._playerData._gold.ToString();
+        double current = 0;
+
+        if(GameData.Instance._playerData._gold.Count == 1)
+            current = GameData.Instance._playerData._gold[0];
+        else
+            current = GameData.Instance._playerData._gold[GameData.Instance._playerData._gold.Count-1] + (GameData.Instance._playerData._gold[GameData.Instance._playerData._gold.Count-2] * 0.001f);
+       
+
+       _text[5].text = current.ToString("###.##");
     }
 
-    public void OnGold(List<int> gold)
+
+    public void AddGold(List<int> gold)
     {
-        List<int> aaa = new List<int>{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-        //_text[7].text = GameData.Instance._playerData._gold.ToString();
+        for(var i = 0; i < gold.Count; i++)
+        {
+            if(GameData.Instance._playerData._gold.Count <= i) GameData.Instance._playerData._gold.Add(0);
+            
+            if(gold[i] <= 0) continue;
+
+            GameData.Instance._playerData._gold[i] += gold[i];
+            
+            if(GameData.Instance._playerData._gold[i] >= 1000)
+            {
+                GameData.Instance._playerData._gold[i] -= 1000;
+
+                if(GameData.Instance._playerData._gold.Count <= i+1) GameData.Instance._playerData._gold.Add(1);
+                else GameData.Instance._playerData._gold[i+1] += 1;
+            }
+        }
+
+        OnGold();
+    }
+
+    public void UseGold(List<int> gold)
+    {
+        bool check = false;
+
+        if(GameData.Instance._playerData._gold.Count < gold.Count) check = true;
+        else
+        {
+            if(GameData.Instance._playerData._gold.Count == gold.Count)
+            {
+                for(var i = gold.Count-1; i > -1; i--)
+                {
+                    if(GameData.Instance._playerData._gold[i] > gold[i]) break;
+
+                    if(GameData.Instance._playerData._gold[i] < gold[i])
+                    {
+                        check = true;
+                        break;
+                    }
+                }
+            }
+        }
+        if(check) return;
+
+        for(var i = gold.Count-1; i > -1; i--)
+        {
+            GameData.Instance._playerData._gold[i] -= gold[i];
+        }
+
+        for(var i = 0; i < GameData.Instance._playerData._gold.Count; i++)
+        { 
+            if(GameData.Instance._playerData._gold[i] < 0)
+            {
+                GameData.Instance._playerData._gold[i] += 1000;
+                if(i+1 < GameData.Instance._playerData._gold.Count) GameData.Instance._playerData._gold[i+1] -= 1;
+            }
+        }
+        if(GameData.Instance._playerData._gold[GameData.Instance._playerData._gold.Count-1] <= 0) 
+            GameData.Instance._playerData._gold.Remove(GameData.Instance._playerData._gold.Count-1);
+
+        OnGold();
+    }
+
+    public void Test()
+    {
+        List<int> aaaa = new List<int>{123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123}; 
+        AddGold(aaaa);
     }
 }

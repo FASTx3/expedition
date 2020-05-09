@@ -129,8 +129,8 @@ public class Battle : MonoBehaviour
         if(_monster_obj_code >= _monster.Count) _monster_obj_code = 0;
         
         //몬스터 수치 적용
-        _monster_hp = 100;//GameData.Instance._monsterDataIndex[1]._hp;//몬스터 체력
-        _monster_hp_max = 100;//GameData.Instance._monsterDataIndex[1]._hp;//몬스터 체력
+        _monster_hp = GameData.Instance._monsterDataIndex[1]._hp;//몬스터 체력
+        _monster_hp_max = GameData.Instance._monsterDataIndex[1]._hp;//몬스터 체력
         _monster_hp_percent = 1f/_monster_hp_max;
         _monster_atk = GameData.Instance._monsterDataIndex[1]._atk;//몬스터 공격력
 
@@ -364,7 +364,7 @@ public class Battle : MonoBehaviour
     public void OnRecovery()//원정대 체력 회복
     {
         if(_team_data == null) return;
-        _team_data._hp += _team_data._rcv;
+        _team_data._hp += _team_data._def;
         if(_team_data._hp >= _team_data._hp_max) 
         {
             OnRecoveryComplete();// 체력 회복 완료  

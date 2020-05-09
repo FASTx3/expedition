@@ -19,7 +19,7 @@ public class UnitMN : MonoBehaviour
 
     public IEnumerator LoadUnitIndexData()
 	{
-		TextAsset t = (TextAsset)Resources.Load("agent", typeof(TextAsset));
+		TextAsset t = (TextAsset)Resources.Load("unit", typeof(TextAsset));
 		yield return t;
 		yield return StartCoroutine(SetDatUnitIndex(t.text));
 	}
@@ -35,7 +35,7 @@ public class UnitMN : MonoBehaviour
             GameData.Instance._setUnit._hp = System.Convert.ToInt64(_jsonList[i]["hp"].ToString());
             GameData.Instance._setUnit._atk = System.Convert.ToInt64(_jsonList[i]["atk"].ToString());
             GameData.Instance._setUnit._cri = (System.Convert.ToInt32(_jsonList[i]["cri"].ToString())*0.01f);
-            GameData.Instance._setUnit._rcv = System.Convert.ToInt64(_jsonList[i]["rcv"].ToString());
+            GameData.Instance._setUnit._def = System.Convert.ToInt64(_jsonList[i]["def"].ToString());
             GameData.Instance._setUnit._grade = _jsonList[i]["grade"].ToString();
             GameData.Instance._setUnit._name = _jsonList[i]["name"].ToString();
 
@@ -52,12 +52,11 @@ public class UnitMN : MonoBehaviour
 
     public void OpenUnitMN()
     {
+        OnLoadUnitUI();
+        if(_unit_data.Count > 0 && _sellect_unit != null) OnSellectUnit(_sellect_unit); 
+
         GameData.Instance._popMN.OnEquipPop(0);
         GameData.Instance._popMN.OpenEquipPop();
-
-        OnLoadUnitUI();
-        if(_unit_data.Count > 0 && _sellect_unit != null) 
-            OnSellectUnit(_sellect_unit); 
     }
 
     public void CloseUnitMN()
@@ -65,6 +64,7 @@ public class UnitMN : MonoBehaviour
         GameData.Instance._popMN.CloseEquipPop();
 
         ClearUnitObjectAll();
+        GameData.Instance._itemMN.ClearItemObjectAll();
     }
 
     GameData.MyUnit _base_unit;
@@ -86,6 +86,9 @@ public class UnitMN : MonoBehaviour
             //뽑은 직원 능력치 초기화
             _base_unit._index = _unit_index;
             _base_unit._lev = 1;
+            _base_unit._weapon = -1;
+            _base_unit._armor = -1;
+            _base_unit._acc = -1;
 
             //빈 데이터 여부 확인
             int _unit_data_check = -1;
@@ -165,7 +168,7 @@ public class UnitMN : MonoBehaviour
             Destroy(_sellect_unit._unit_obj.gameObject);
         }
 
-        _sellect_unit.OnFire();
+        _sellect_unit.OnDel();
 
         _unit_data.Remove(_sellect_unit);
         Destroy(_sellect_unit.gameObject);
@@ -238,11 +241,16 @@ public class UnitMN : MonoBehaviour
             _obj_btn[1].SetActive(false);
         }
 
+        OnUnitList();
+    }
+    public void OnUnitList()
+    {
         for(var i = 0; i < _unit_data.Count; i++)
         {
             CreateUnitObject(_unit_data[i]);
         }
     }
+
     public void CreateUnitObject(UnitData data)//대원 목록 UI 생성
     {
         UnitObject obj = null;

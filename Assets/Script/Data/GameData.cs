@@ -64,7 +64,7 @@ public class GameData
         public long _hp;
         public long _atk;
         public float _cri;
-        public long _rcv;
+        public long _def;
         public int _type;
         public string _grade;
         public string _name;
@@ -77,7 +77,7 @@ public class GameData
     {
         public int _index;//대원 코드
         public int _lev;//레벨
-        public int _weopon;//착용 무기
+        public int _weapon;//착용 무기
         public int _armor;//착용 갑옷
         public int _acc;//악세서리
         public int _buy_count; //구매된 순서
@@ -91,7 +91,7 @@ public class GameData
         public int _round;//진행된 스테이지의 라운드
         public int _status;//원정대 상태
         public List<int> _member;//원정대 멤버
-        public int _weopon;//원정대 무기
+        public int _weapon;//원정대 무기
         public int _armor;//원정대 갑옷
         public int _acc;//원정대 악세서리
         public string _time; //원정 출발 시간
@@ -109,6 +109,28 @@ public class GameData
     }
     public MonsterData _setMonster;
     public Dictionary<int, MonsterData> _monsterDataIndex = new Dictionary<int, MonsterData>();    
+
+    [Serializable]
+    public struct ItemData
+    {
+        public int _index;
+        public int _class;
+        public long _power;
+        public int _type;
+        public string _name;
+        public string _intro;
+    }
+    public ItemData _setItem;
+    public Dictionary<int, ItemData> _itemDataIndex = new Dictionary<int, ItemData>();
+
+    [Serializable]
+    public struct MyItem
+    {
+        public int _index;//아이템 코드
+        public int _lev;//레벨
+        public int _type;//착용 무기
+        public int _buy_count; //구매된 순서
+    }
 
     [Serializable]
     public struct QuestData
@@ -130,9 +152,12 @@ public class GameData
         public float _ver = 0;
         public Dictionary<int, MyUnit> _unit = new Dictionary<int, MyUnit>();
         public List<Team> _team = new List<Team>();
+        public Dictionary<int, MyItem> _item = new Dictionary<int, MyItem>();
         public Dictionary<int, int> _quest = new Dictionary<int, int>();
 
         public List<int> _gold = new List<int>();
+
+
         public long _jewel;
 //---------------------------------------------------
         // 게임 기본 정보에 대한 부분.
@@ -388,5 +413,20 @@ public class GameData
       v = System.Convert.ToInt64(st.ToString());
       return v;
    }
-    
+
+   public string OnType(int type)
+    {
+        switch(type)
+        {
+            case 1 : return "불";
+            case 2 : return "물";
+            case 3 : return "땅";
+            case 4 : return "바람";
+            case 5 : return "빛";
+            case 6 : return "어둠";
+        }
+
+        return "속성 없음";
+    }    
+
 }

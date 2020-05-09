@@ -26,6 +26,7 @@ public class GM : MonoBehaviour
     {
         yield return StartCoroutine(GameData.Instance._unitMN.SetUnitMNData());//유닛 데이터 불러오기
         yield return StartCoroutine(GameData.Instance._monsterMN.SetMonsterMNData());//몬스터 데이터 불러오기
+        yield return StartCoroutine(GameData.Instance._itemMN.SetItemMNData());//몬스터 데이터 불러오기
         yield return StartCoroutine(GameData.Instance._questMN.SetQuestMNData());//퀘스트 데이터 불러오기
 
         if(_save_reset) PlayerPrefs.DeleteAll();
@@ -34,6 +35,7 @@ public class GM : MonoBehaviour
 
         if(GameData.Instance._playerData._save_data)
         {
+            GameData.Instance._itemMN.OnLoadItemData();//보유한 아이템 데이터 불러오기
             GameData.Instance._unitMN.OnLoadUnitData();//보유한 유닛 데이터 불러오기
             GameData.Instance._expeditionMN.OnLoadTeam();//파티 슬롯 데이터 불러오기
             GameData.Instance._battleMN.OnLoadBattle();//원정 데이터 불러오기            
@@ -49,7 +51,7 @@ public class GM : MonoBehaviour
     {
         GameData.Instance._playerData._save_data = true;
 
-        for(var i = 0;  i < 26; i++) GameData.Instance._playerData._gold.Add(0);
+        GameData.Instance._playerData._gold.Add(0);
         Debug.Log("GameData.Instance._playerData._gold.Count : " + GameData.Instance._playerData._gold.Count); 
         
         GameData.Instance._expeditionMN.OnAddTeam();//팀 세팅
