@@ -51,8 +51,7 @@ public class GM : MonoBehaviour
     {
         GameData.Instance._playerData._save_data = true;
 
-        GameData.Instance._playerData._gold.Add(0);
-        Debug.Log("GameData.Instance._playerData._gold.Count : " + GameData.Instance._playerData._gold.Count); 
+        GameData.Instance._playerData._test_gold.Add(0);
         
         GameData.Instance._expeditionMN.OnAddTeam();//팀 세팅
         

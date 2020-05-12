@@ -11,6 +11,7 @@ public class TeamData : MonoBehaviour
     public float _cri;//원정대 치명타율
     public long _def;//원정대 초당 회복량
 
+    public int _lv;//원정대 레벨
     public int _map;//원정중인 맵
     public int _stage;//진행중인 스테이지
     public int _round;//진행중인 라운드
@@ -23,6 +24,8 @@ public class TeamData : MonoBehaviour
 
     public int _data_code;
     public GameData.Team _team_data = new GameData.Team();
+
+    public Battle _battle;
 
     public long _damage;//누적 데미지
 
@@ -44,6 +47,9 @@ public class TeamData : MonoBehaviour
                 }                
             }            
         }
+        _lv = _team_data._lv;
+        _map = _team_data._map;
+
         _stage = _team_data._stage;
         _round = _team_data._round;
         _status = _team_data._status;
@@ -74,7 +80,7 @@ public class TeamData : MonoBehaviour
     public void OnUpdateInfo()//최종적인 팀 정보 갱신 호출 함수
     {
         OnStatusSetting();
-        GameData.Instance._battleMN._battle[_data_code].OnTeamInfoUpdate();
+        _battle.OnTeamInfoUpdate();
         if(GameData.Instance._expeditionMN._team_now == _data_code) GameData.Instance._expeditionMN.OnShowInfo();//현재 화면에 표시중인 팀이면 UI 갱신  
     }
 
@@ -87,12 +93,12 @@ public class TeamData : MonoBehaviour
             break;
 
             case 1 :
-                GameData.Instance._battleMN._battle[_data_code].OnBattlePause();
+                _battle.OnBattlePause();
                 if(_member.Count > 0) _hp = -_damage;
             break;
 
             case 2 :
-                GameData.Instance._battleMN._battle[_data_code]._rest = false;
+                _battle._rest = false;
             break;
         }
 
@@ -114,8 +120,8 @@ public class TeamData : MonoBehaviour
         if(_hp > _hp_max) _hp = _hp_max;
         _hp_percent = 1f/_hp_max;
 
-        if(_status == 1) GameData.Instance._battleMN._battle[_data_code].OnBattleRestart();
-        else if(_status == 2) GameData.Instance._battleMN._battle[_data_code]._rest = true;
+        if(_status == 1) _battle.OnBattleRestart();
+        else if(_status == 2) _battle._rest = true;
     }
 
     public void OnTeamStatus(int code)//원정대 상태(0 : 원정 대기 / 1 : 원정중 / 2 : 회복중)
@@ -139,25 +145,41 @@ public class TeamData : MonoBehaviour
 
     public void OnStage(bool next)
     {
+        bool next_stage = false;
+
         _team_data = GameData.Instance._playerData._team[_data_code];
                 
         if(next) 
         {
             _round += 1;
+
             if(_round > 5)
             {
                 _round = 1;
                 _stage += 1;
+                _map = Random.Range(1, GameData.Instance._monsterDataIndex.Count+1);                                
+
+                if(_stage % 10 <= 0) 
+                {                    
+                    _lv += 1;
+                    _team_data._lv = _lv;                    
+                }
+
+                next_stage = true;
             }
         } 
         else _round = 1;
 
+        _team_data._map = _map;
         _team_data._stage = _stage;
         _team_data._round = _round;
 
         GameData.Instance._playerData._team[_data_code] = _team_data;
 
         OnStageInfo();
+        
+        if(next_stage) _battle.OnWinNext();
+        else _battle.OnWin();
     }
 
     public void OnStageInfo()

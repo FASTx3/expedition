@@ -46,6 +46,8 @@ public class Battle : MonoBehaviour
     public void OnTeamSetting(TeamData team)//파티 세팅
     {
         _team_data = team;
+        _team_data._battle = this;
+
         OnTeamInfoUpdate();
 
         switch(_team_data._status) 
@@ -94,7 +96,7 @@ public class Battle : MonoBehaviour
             case 1 :                            
                 if(_team_data._status == 2) break;
                 if(_team_data._status == 0) OnBattleStart();    
-                _team_hp_guage.transform.localPosition = new Vector3(0, -50, 0);
+                //_team_hp_guage.transform.localPosition = new Vector3(0, -50, 0);
             break;
 
             case 2 :
@@ -102,22 +104,22 @@ public class Battle : MonoBehaviour
                 _obj_team_member[1].transform.localPosition = Vector3.zero;
 
                 if(_team_data._status == 2) break;
-                _team_hp_guage.transform.localPosition = new Vector3(-25, -50, 0);
+                //_team_hp_guage.transform.localPosition = new Vector3(-25, -50, 0);
             break;
 
             case 3 :
                 if(_team_data._status == 2) break;
-                _team_hp_guage.transform.localPosition = new Vector3(-25, -50, 0);
+                //_team_hp_guage.transform.localPosition = new Vector3(-25, -50, 0);
             break;
 
             case 4 :
                 if(_team_data._status == 2) break;
-                _team_hp_guage.transform.localPosition = new Vector3(-45, -50, 0);
+                //_team_hp_guage.transform.localPosition = new Vector3(-45, -50, 0);
             break;
 
             case 5 :
                 if(_team_data._status == 2) break;
-                _team_hp_guage.transform.localPosition = new Vector3(-55, -50, 0);
+                //_team_hp_guage.transform.localPosition = new Vector3(-55, -50, 0);
             break;
         }
     }
@@ -127,11 +129,15 @@ public class Battle : MonoBehaviour
         if(!_map_move) _map_move = true;
 
         if(_monster_obj_code >= _monster.Count) _monster_obj_code = 0;
-        
+                
         //몬스터 수치 적용
-        _monster_hp = GameData.Instance._monsterDataIndex[1]._hp;//몬스터 체력
-        _monster_hp_max = GameData.Instance._monsterDataIndex[1]._hp;//몬스터 체력
+        _monster_hp = GameData.Instance._monsterDataIndex[_team_data._map]._hp * _team_data._lv;//몬스터 체력
+        if(_team_data._round >= 5) _monster_hp *= 2;
+
+        _monster_hp_max = _monster_hp;//몬스터 체력
         _monster_hp_percent = 1f/_monster_hp_max;
+
+
         _monster_atk = GameData.Instance._monsterDataIndex[1]._atk;//몬스터 공격력
 
         if(_monster.Count < 1)
@@ -146,7 +152,7 @@ public class Battle : MonoBehaviour
         _monster_hp_guage.value = 1;
 
         _now_monster = _monster[_monster_obj_code].transform;
-        _monster[_monster_obj_code].OnSet(1);
+        _monster[_monster_obj_code].OnSet(_team_data._map);
         
         _tweenId = "0" + _team_data._data_code;                              
         _now_monster.DOLocalMove(Vector3.zero, 2f).SetEase(Ease.Linear).SetId(_tweenId).OnComplete(() =>
@@ -182,12 +188,12 @@ public class Battle : MonoBehaviour
     public void OnBattleStart()
     {
         if(_obj_team_member.Count < 1) return;//배치된 멤버가 없을 시에는 원정 못함
-
+        /*
         if(_team_data._status == 2) OnRecoveryComplete();//체력 회복 상태에서 되돌림
-
+        
         if(!_team_hp_guage.gameObject.activeSelf) _team_hp_guage.gameObject.SetActive(true);
         _team_hp_guage.value = (_team_data._hp*_team_data._hp_percent);
-
+        */
         _team_data.OnTeamStatus(1);
         _team.gameObject.SetActive(true);
         _obj_tent.SetActive(false);
@@ -232,7 +238,7 @@ public class Battle : MonoBehaviour
         _team.gameObject.SetActive(false);
         _obj_tent.SetActive(true);
 
-        _team_hp_guage.transform.localPosition = new Vector3(0, -80, 0);
+        //_team_hp_guage.transform.localPosition = new Vector3(0, -80, 0);
     }
 
     public void OnMaintenance()//정비 세팅
@@ -248,19 +254,19 @@ public class Battle : MonoBehaviour
         //_obj_tent.SetActive(true);
         _obj_tent.SetActive(false);
 
-        _team_hp_guage.gameObject.SetActive(false); 
+        //_team_hp_guage.gameObject.SetActive(false); 
     }
 
     public void OnBattle()
     {      
         if(_now_monster == null) return;
 
-        _team_data.OnDamage(_monster_atk);
+        //_team_data.OnDamage(_monster_atk);
         _monster_hp -= _team_data._atk;
 
-        _team_hp_guage.value = (_team_data._hp*_team_data._hp_percent); 
+        //_team_hp_guage.value = (_team_data._hp*_team_data._hp_percent); 
         _monster_hp_guage.value = (_monster_hp*_monster_hp_percent);  
-
+        /*
         if(_team_data._hp <= 0)
         {
             //원정대 패배            
@@ -271,23 +277,22 @@ public class Battle : MonoBehaviour
         }
         else
         {
+        */
             if(_monster_hp <= 0)
             {
                 //몬스터 격파
                 _team_data.OnStage(true);
-                OnWin();
-                
-                Debug.Log("남은 체력-----------------------------------------" + _team_data._hp);
+                //OnWin();
             }
             else
             {
                 //누구도 죽지않는 상황                
                 OnDraw();
             }
-        }     
+        //}     
     }
 
-    void OnWin()//전투 승리
+    public void OnWin()//전투 승리
     {
         if(_now_monster == null) return;
 
@@ -297,6 +302,25 @@ public class Battle : MonoBehaviour
             _death_monster.gameObject.SetActive(false);                      
         });
         OnMonsterSetting();  
+    }
+
+    public void OnWinNext()//다음 스테이지
+    {
+        if(_now_monster == null) return;
+
+        _death_monster = _now_monster;
+        _death_monster.DOLocalJump(new Vector3(1000, 0, 0), 350f, 1, 0.5f).SetEase(Ease.Linear).OnComplete(() =>
+        {
+            _death_monster.gameObject.SetActive(false);                      
+        });
+
+        _fade.DOFade(1, 0.25f).SetEase(Ease.Linear).SetId("fade").OnComplete(() =>
+        {
+            _fade.DOFade(0, 0.25f).SetEase(Ease.Linear).SetId("fade").OnComplete(() =>
+            {
+                OnMonsterSetting(); 
+            });
+        });         
     }
 
     void OnLose()//전투 패배

@@ -1,8 +1,8 @@
 [{"index":1,"hp":5,"atk":1,"cri":0,"rate":10,"name":"몬스터1"},
-{"index":2,"hp":10,"atk":2,"cri":0,"rate":10,"name":"몬스터2"},
-{"index":3,"hp":15,"atk":3,"cri":0,"rate":10,"name":"몬스터3"},
-{"index":4,"hp":20,"atk":4,"cri":0,"rate":10,"name":"몬스터4"},
-{"index":5,"hp":25,"atk":5,"cri":0,"rate":5,"name":"몬스터5"},
-{"index":6,"hp":30,"atk":6,"cri":0,"rate":5,"name":"몬스터6"},
-{"index":7,"hp":35,"atk":7,"cri":0,"rate":2,"name":"몬스터7"},
-{"index":8,"hp":40,"atk":8,"cri":0,"rate":1,"name":"몬스터8"}]
+{"index":2,"hp":5,"atk":2,"cri":0,"rate":10,"name":"몬스터2"},
+{"index":3,"hp":5,"atk":3,"cri":0,"rate":10,"name":"몬스터3"},
+{"index":4,"hp":5,"atk":4,"cri":0,"rate":10,"name":"몬스터4"},
+{"index":5,"hp":5,"atk":5,"cri":0,"rate":5,"name":"몬스터5"},
+{"index":6,"hp":5,"atk":6,"cri":0,"rate":5,"name":"몬스터6"},
+{"index":7,"hp":5,"atk":7,"cri":0,"rate":2,"name":"몬스터7"},
+{"index":8,"hp":5,"atk":8,"cri":0,"rate":1,"name":"몬스터8"}]

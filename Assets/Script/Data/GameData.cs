@@ -86,9 +86,10 @@ public class GameData
     [Serializable]
     public struct Team
     {
+        public int _lv;//원정대 레벨
         public int _map;//원정중인 맵
         public int _stage;//진행된 스테이지
-        public int _round;//진행된 스테이지의 라운드
+        public int _round;//진행된 스테이지의 라운드        
         public int _status;//원정대 상태
         public List<int> _member;//원정대 멤버
         public int _weapon;//원정대 무기
@@ -155,7 +156,9 @@ public class GameData
         public Dictionary<int, MyItem> _item = new Dictionary<int, MyItem>();
         public Dictionary<int, int> _quest = new Dictionary<int, int>();
 
-        public List<int> _gold = new List<int>();
+        public long _gold;
+
+        public List<int> _test_gold = new List<int>();
 
 
         public long _jewel;
@@ -407,7 +410,7 @@ public class GameData
       return v;
    }
 
-    public long StringToLong(string st)
+   public long StringToLong(string st)
    {
       long v =-1;
       v = System.Convert.ToInt64(st.ToString());
@@ -428,5 +431,4 @@ public class GameData
 
         return "속성 없음";
     }    
-
 }

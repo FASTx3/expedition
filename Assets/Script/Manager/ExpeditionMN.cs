@@ -27,7 +27,8 @@ public class ExpeditionMN : MonoBehaviour
     public GameData.Team _set_team = new GameData.Team();
     public void AddTeam()// 팀 추가
     {
-        _set_team._map = 0;
+        _set_team._map = 1;
+        _set_team._lv = 1;
         _set_team._stage = 1;
         _set_team._round = 1;
         _set_team._status = 0;
@@ -221,13 +222,14 @@ public class ExpeditionMN : MonoBehaviour
         //_text[7].text = GameData.Instance._playerData._gold.ToString();
         double current = 0;
 
-        if(GameData.Instance._playerData._gold.Count == 1)
-            current = GameData.Instance._playerData._gold[0];
+        if(GameData.Instance._playerData._test_gold.Count == 1)
+            current = GameData.Instance._playerData._test_gold[0];
         else
-            current = GameData.Instance._playerData._gold[GameData.Instance._playerData._gold.Count-1] + (GameData.Instance._playerData._gold[GameData.Instance._playerData._gold.Count-2] * 0.001f);
+            current = GameData.Instance._playerData._test_gold[GameData.Instance._playerData._test_gold.Count-1] + (GameData.Instance._playerData._test_gold[GameData.Instance._playerData._test_gold.Count-2] * 0.001f);
        
+       char unit = (char)(65 + GameData.Instance._playerData._test_gold.Count-1);
 
-       _text[5].text = current.ToString("###.##");
+       _text[5].text = current.ToString("###.## ") + char.ToString(unit);
     }
 
 
@@ -235,18 +237,18 @@ public class ExpeditionMN : MonoBehaviour
     {
         for(var i = 0; i < gold.Count; i++)
         {
-            if(GameData.Instance._playerData._gold.Count <= i) GameData.Instance._playerData._gold.Add(0);
+            if(GameData.Instance._playerData._test_gold.Count <= i) GameData.Instance._playerData._test_gold.Add(0);
             
             if(gold[i] <= 0) continue;
 
-            GameData.Instance._playerData._gold[i] += gold[i];
+            GameData.Instance._playerData._test_gold[i] += gold[i];
             
-            if(GameData.Instance._playerData._gold[i] >= 1000)
+            if(GameData.Instance._playerData._test_gold[i] >= 1000)
             {
-                GameData.Instance._playerData._gold[i] -= 1000;
+                GameData.Instance._playerData._test_gold[i] -= 1000;
 
-                if(GameData.Instance._playerData._gold.Count <= i+1) GameData.Instance._playerData._gold.Add(1);
-                else GameData.Instance._playerData._gold[i+1] += 1;
+                if(GameData.Instance._playerData._test_gold.Count <= i+1) GameData.Instance._playerData._test_gold.Add(1);
+                else GameData.Instance._playerData._test_gold[i+1] += 1;
             }
         }
 
@@ -257,16 +259,16 @@ public class ExpeditionMN : MonoBehaviour
     {
         bool check = false;
 
-        if(GameData.Instance._playerData._gold.Count < gold.Count) check = true;
+        if(GameData.Instance._playerData._test_gold.Count < gold.Count) check = true;
         else
         {
-            if(GameData.Instance._playerData._gold.Count == gold.Count)
+            if(GameData.Instance._playerData._test_gold.Count == gold.Count)
             {
                 for(var i = gold.Count-1; i > -1; i--)
                 {
-                    if(GameData.Instance._playerData._gold[i] > gold[i]) break;
+                    if(GameData.Instance._playerData._test_gold[i] > gold[i]) break;
 
-                    if(GameData.Instance._playerData._gold[i] < gold[i])
+                    if(GameData.Instance._playerData._test_gold[i] < gold[i])
                     {
                         check = true;
                         break;
@@ -276,28 +278,53 @@ public class ExpeditionMN : MonoBehaviour
         }
         if(check) return;
 
+        Debug.Log("---------------------------------------------------------------1");
+
         for(var i = gold.Count-1; i > -1; i--)
         {
-            GameData.Instance._playerData._gold[i] -= gold[i];
+            GameData.Instance._playerData._test_gold[i] -= gold[i];
         }
 
-        for(var i = 0; i < GameData.Instance._playerData._gold.Count; i++)
+         Debug.Log("---------------------------------------------------------------2");
+
+        int _my_gold = GameData.Instance._playerData._test_gold.Count;
+
+        for(var i = 0; i < _my_gold; i++)
         { 
-            if(GameData.Instance._playerData._gold[i] < 0)
+            if(GameData.Instance._playerData._test_gold[i] < 0)
             {
-                GameData.Instance._playerData._gold[i] += 1000;
-                if(i+1 < GameData.Instance._playerData._gold.Count) GameData.Instance._playerData._gold[i+1] -= 1;
+                GameData.Instance._playerData._test_gold[i] += 1000;
+                if(i+1 < _my_gold) GameData.Instance._playerData._test_gold[i+1] -= 1;
             }
         }
-        if(GameData.Instance._playerData._gold[GameData.Instance._playerData._gold.Count-1] <= 0) 
-            GameData.Instance._playerData._gold.Remove(GameData.Instance._playerData._gold.Count-1);
+
+         Debug.Log("---------------------------------------------------------------3");
+
+        for(var i = _my_gold-1; i > -1; i--)
+        {
+            if(GameData.Instance._playerData._test_gold[i] > 0) break;
+
+            if(GameData.Instance._playerData._test_gold[i] <= 0 && i > 0) GameData.Instance._playerData._test_gold.Remove(GameData.Instance._playerData._test_gold[i]);
+
+        }            
+
+        Debug.Log("---------------------------------------------------------------4 : " + GameData.Instance._playerData._test_gold.Count);
+
 
         OnGold();
     }
 
     public void Test()
     {
-        List<int> aaaa = new List<int>{123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123}; 
+        //List<int> aaaa = new List<int>{123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123}; 
+        List<int> aaaa = new List<int>{500};
         AddGold(aaaa);
+    }
+
+    public void Teste()
+    {
+        List<int> aaaa = new List<int>{499};
+        //List<int> aaaa = new List<int>{122, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123};
+        UseGold(aaaa);
     }
 }
