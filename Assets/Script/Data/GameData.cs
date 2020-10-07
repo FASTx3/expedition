@@ -120,6 +120,7 @@ public class GameData
         public int _type;
         public string _name;
         public string _intro;
+        public long _price;
     }
     public ItemData _setItem;
     public Dictionary<int, ItemData> _itemDataIndex = new Dictionary<int, ItemData>();
@@ -155,6 +156,7 @@ public class GameData
         public List<Team> _team = new List<Team>();
         public Dictionary<int, MyItem> _item = new Dictionary<int, MyItem>();
         public Dictionary<int, int> _quest = new Dictionary<int, int>();
+        public Dictionary<int, int> _weapon = new Dictionary<int, int>();
 
         public long _gold;
 

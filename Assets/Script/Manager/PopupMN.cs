@@ -36,6 +36,10 @@ public class PopupMN : MonoBehaviour
                     case 0 :
                         GameData.Instance._questMN.CloseQuest();
                     break;
+
+                    case 2 :
+                        GameData.Instance._itemMN.ClearWeapon();
+                    break;
                 }
             }   
         }

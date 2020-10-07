@@ -11,6 +11,6 @@ public class CampMN : MonoBehaviour
 
     public void OpenCamp()
     {
-        if(!GameData.Instance._popMN.OnMainPop(2)) return;
+        if(!GameData.Instance._popMN.OnMainPop(3)) return;
     }
 }

@@ -36,6 +36,7 @@ public class ItemMN : MonoBehaviour
             GameData.Instance._setItem._power = System.Convert.ToInt64(_jsonList[i]["power"].ToString());
             GameData.Instance._setItem._name = _jsonList[i]["name"].ToString();
             GameData.Instance._setItem._intro = _jsonList[i]["intro"].ToString();
+            GameData.Instance._setItem._price = System.Convert.ToInt64(_jsonList[i]["price"].ToString());
 
 			GameData.Instance._itemDataIndex.Add(GameData.Instance._setItem._index, GameData.Instance._setItem); 
 
@@ -299,5 +300,78 @@ public class ItemMN : MonoBehaviour
             _obj_btn[0].SetActive(true);
             _obj_btn[1].SetActive(false);
         }            
+    }
+
+    public long _weapon_power; //원정대 무기 공격력
+    public long _weapon_price; //원정대 무기 강화 가격
+
+    public WeaponData _weapon_data_ori;
+    public Dictionary<int, WeaponData> _weapon_data = new Dictionary<int, WeaponData>();
+
+    public Transform _weapon_parent;
+    public Weapon _weapon_ori;
+    public Dictionary<int, Weapon> _weapon_list = new Dictionary<int, Weapon>();
+
+    public void OnLoadWeaponData()
+    {
+        for(var i = 1; i < GameData.Instance._playerData._weapon.Count+1; i++)
+        {
+            CreateWeaponData(i);
+        }
+    }
+
+    public void CreateWeaponData(int index)
+    {
+        WeaponData obj = null;
+        obj = Instantiate<WeaponData>(_weapon_data_ori, transform);
+        obj.transform.localScale = Vector3.one;
+        obj.transform.localPosition = Vector3.zero;
+        obj.OnSet(index);
+
+        _weapon_data.Add(index, obj);
+    }
+    
+    public void OpenWeapon()
+    {
+        if(!GameData.Instance._popMN.OnMainPop(2)) return;
+
+        for(var i = 1; i < GameData.Instance._itemDataIndex.Count+1; i++)
+        {
+            if(GameData.Instance._playerData._weapon.ContainsKey(i)) CreateWeaponObject(i, _weapon_data[i]);
+            else CreateWeaponObject(i, null);
+        }
+
+        _weapon_parent.localPosition = new Vector3(0, 145*(GameData.Instance._playerData._weapon.Count-1),0);
+    }
+
+    public void CreateWeaponObject(int index, WeaponData data)
+    {
+        Weapon obj = null;
+        obj = Instantiate<Weapon>(_weapon_ori, _weapon_parent);
+        obj.transform.localScale = Vector3.one;
+        obj.transform.localPosition = Vector3.zero;
+       
+        if(data == null) obj.OnNullSet(index);
+        else obj.OnSet(data);
+        
+        _weapon_list.Add(index, obj);
+    }
+
+    public void ClearWeapon()
+    {
+        for(var i = 1; i < _weapon_list.Count+1; i++)
+        {
+            if(_weapon_list.ContainsKey(i)) Destroy(_weapon_list[i].gameObject);
+        }       
+
+        _weapon_list.Clear();
+    }
+
+    public void OnAddWeapon(int index)
+    {
+        GameData.Instance._playerData._weapon.Add(index, 1);
+        CreateWeaponData(index);
+
+        if(_weapon_list.ContainsKey(index)) _weapon_list[index].OnSet(_weapon_data[index]);
     }
 }

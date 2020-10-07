@@ -35,6 +35,7 @@ public class GM : MonoBehaviour
 
         if(GameData.Instance._playerData._save_data)
         {
+            GameData.Instance._itemMN.OnLoadWeaponData();//무기 데이터 불러오기
             GameData.Instance._itemMN.OnLoadItemData();//보유한 아이템 데이터 불러오기
             GameData.Instance._unitMN.OnLoadUnitData();//보유한 유닛 데이터 불러오기
             GameData.Instance._expeditionMN.OnLoadTeam();//파티 슬롯 데이터 불러오기
@@ -42,7 +43,7 @@ public class GM : MonoBehaviour
         }
         else FirstData();//게임 최초 시작시 생성되는 데이터
         
-        GameData.Instance._battleMN.OnBattlePosition();
+        GameData.Instance._battleMN.OnBattlePosition();        
         GameData.Instance._questMN.OnLoadQuest();//퀘스트 데이터 불러오기
         GameData.Instance._questMN.OpenQuest();
     }
@@ -52,6 +53,7 @@ public class GM : MonoBehaviour
         GameData.Instance._playerData._save_data = true;
 
         GameData.Instance._playerData._test_gold.Add(0);
+        GameData.Instance._itemMN.OnAddWeapon(1);//무기 추가       
         
         GameData.Instance._expeditionMN.OnAddTeam();//팀 세팅
         

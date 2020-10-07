@@ -156,7 +156,7 @@ public class ExpeditionMN : MonoBehaviour
     {
         if(_team_data.Count <= 0) return;
 
-        _text[0].text = _team_data[_team_now]._atk.ToString();//팀 공격력
+        _text[0].text = (_team_data[_team_now]._atk + GameData.Instance._itemMN._weapon_data[GameData.Instance._playerData._weapon.Count]._atk).ToString();//팀 공격력
         _text[1].text = _team_data[_team_now]._cri.ToString();//팀 치명타율
         _text[2].text = _team_data[_team_now]._def.ToString();//팀 초당 회복량
 

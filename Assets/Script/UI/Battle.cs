@@ -262,7 +262,7 @@ public class Battle : MonoBehaviour
         if(_now_monster == null) return;
 
         //_team_data.OnDamage(_monster_atk);
-        _monster_hp -= _team_data._atk;
+        _monster_hp -= (_team_data._atk+GameData.Instance._itemMN._weapon_data[GameData.Instance._playerData._weapon.Count]._atk);
 
         //_team_hp_guage.value = (_team_data._hp*_team_data._hp_percent); 
         _monster_hp_guage.value = (_monster_hp*_monster_hp_percent);  
